@@ -28,7 +28,7 @@ def main():
     # Madison and Hamilton wrote 18-20
     query = "Who wrote Federalist No. 18?"
     # query = "Give details about the paper titled 'Harry Potter'"
-    query = "What paper mentions the text - 'The internal effects of a mutable policy are still more calamitous'"
+    # query = "What paper mentions the text - 'The internal effects of a mutable policy are still more calamitous'"
 
     vectorstore = PineconeVectorStore(
         index_name=os.environ["FEDERALIST_PAPERS_INDEX_NAME"], embedding=embeddings
@@ -36,6 +36,9 @@ def main():
 
     # custom prompt
     template = """Use the following pieces of context to answer the question at the end.
+
+    {context}
+
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     You are a linguistic expert, and a historian. You can analyze patterns in text and attribute them to a specific person or writer.
     You also know that the writers of the Federalist papers are John Jay, Alexander Hamilton, and James Madison.
@@ -43,10 +46,9 @@ def main():
     Sometimes a Federalist paper has a single author or it is collaboration between multiple authors.
     You will follow the steps below to answer the question at the end.
     1. Figure out if the Authorship is ambiguous or not.
-    3. If there is no ambiguity about the authorship, just output the author or authors as is.
-    2. Remember that there could be multiple authors for a single paper. If there was an assistance from another author, return both authors.
+    2. If there is no ambiguity about the authorship, just output the author or authors as is.
+    3. Make sure to list primary author, secondary author and and tertiary author if any.
     4. If there is ambiguity about the authorship, use your expertise about the style of writing and analyze the text to resolve the ambiguity and determine the correct author.
-    {context}
     5. Describe the steps you followed to answer the question.
     
     Question: {question}

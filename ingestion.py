@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_community.document_loaders import TextLoader
 from langchain_experimental.text_splitter import SemanticChunker
-from langchain_text_splitters import CharacterTextSplitter
+from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
@@ -19,7 +19,11 @@ if __name__ == '__main__':
 
             # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
             embeddings = OpenAIEmbeddings()
-            text_splitter = SemanticChunker(embeddings=embeddings)
+            # text_splitter = SemanticChunker(embeddings=embeddings)
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=100,
+                                                           chunk_overlap=20,
+                                                           length_function=len,
+                                                           is_separator_regex=False,)
             texts = text_splitter.split_documents(document)
             print(f"created {len(texts)} chunks")
 
